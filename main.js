@@ -1,15 +1,29 @@
-function wsearch(valueRegexp, obj = window) {
+function wsearch(valueRegexp, options) {
 	try {
 		console.clear();
 	} catch (e) { }
 
 	console.log(`...searching...`);
 
+	if (options?.types === `all`) {
+		options.types = [`.+`];
+	}
+
+	let params = {
+		target: options?.target || window,
+		types: options?.types ? new RegExp(`^\\[object\\s(${options.types.join(`|`)})\\]$`, `i`) : /^\[object\s(Window|Object|Array|Set|Map)\]$/,
+		functions: options?.functions ? true : false
+	};
+
 	if (!window.wsearchObj?.v) {
 		window.wsearchObj = {v: true};
 	}
 
-	let results = wsearchRecursion(valueRegexp, obj);
+	let result;
+
+	try {
+		results = wsearchRecursion(valueRegexp, params.target);
+	} catch (e) { }
 
 	window.wsearchObj.v = false;
 
@@ -18,64 +32,67 @@ function wsearch(valueRegexp, obj = window) {
 	} catch (e) { }
 
 	return results
-}
 
-function wsearchRecursion(valueRegexp, obj, findPathArr = [], path = ``) {
-	let curObj;
-	let curGetKey = `[\`key\`]`;
+	function wsearchRecursion(valueRegexp, obj, findPathArr = [], path = ``) {
+		let currLevel = {
+			obj: obj,
+			key: `[\`key\`]`
+		};
 
-	try {
-		let type = Object.prototype.toString.call(obj).match(/^\[object\s(Window|Object|Array|Set|Map)\]$/);
-		//let type = Object.prototype.toString.call(obj).match(/^\[object\s(.+)\]$/);
+		try {
+			let type = Object.prototype.toString.call(obj).match(params.types);
 
-		if (obj?.wsearchWasHere?.v || !type) {
+			if (!type || obj?.wsearchWasHere?.v) {
+				return
+			}
+
+			obj.wsearchWasHere = window.wsearchObj;
+
+			switch (type[1]) {
+			case `Set`:
+				currLevel = {
+					obj: Array.from(obj),
+					key: `.has(\`key\`)`
+				};
+
+				break;
+			case `Map`:
+				currLevel = {
+					obj: Object.fromEntries(obj),
+					key: `.get(\`key\`)`
+				};
+
+				break;
+			}
+		} catch (e) {
 			return
 		}
 
-		obj.wsearchWasHere = window.wsearchObj;
+		for (let [key] of Object.entries(currLevel.obj).sort((a, b) => {
+			let t1 = typeof a[1] === `object` ? -1 : 0;
+			let t2 = typeof b[1] === `object` ? -1 : 0;
 
-		let iterable;
+			return t1 - t2
+		})) {
+			try {
+				if (key === `wsearchWasHere` || key === `wsearchObj`) {
+					continue
+				}
 
-		switch (type[1]) {
-		case `Set`:
-			iterable = Array.from(obj);
-			curGetKey = `.has(\`key\`)`;
-			break;
-		case `Map`:
-			iterable = Object.fromEntries(obj);
-			curGetKey = `.get(\`key\`)`;
-			break;
-		}
+				let curPath = path + currLevel.key.replace(`key`, key);
 
-		curObj = iterable || obj;
-	} catch (e) {
-		return
-	}
-
-	for (let [key, value] of Object.entries(curObj).sort((a, b) => {
-		let t1 = typeof a[1] === `object` ? -1 : 0;
-		let t2 = typeof b[1] === `object` ? -1 : 0;
-
-		return t2 - t1
-	}).reverse()) {
-		try {
-			if (key === `wsearchWasHere` || key === `wsearchObj`) {
+				if (typeof currLevel.obj[key] === `string` || typeof currLevel.obj[key] === `number` || (params.functions && typeof currLevel.obj[key] === `function`)) {
+					if (`${currLevel.obj[key]}`.match(valueRegexp)) {
+						findPathArr.push([curPath, currLevel.obj[key]]);
+					}
+				} else {
+					wsearchRecursion(valueRegexp, currLevel.obj[key], findPathArr, curPath);
+				}
+			} catch (e) {
 				continue
 			}
-
-			let curPath = path + curGetKey.replace(`key`, key);
-
-			if (typeof curObj[key] === `string` || typeof curObj[key] === `number`) {
-				if (`${curObj[key]}`.match(valueRegexp)) {
-					findPathArr.push([curPath, curObj[key]]);
-				}
-			} else {
-				wsearchRecursion(valueRegexp, curObj[key], findPathArr, curPath);
-			}
-		} catch (e) {
-			continue
 		}
-	}
 
-	return findPathArr
+		return findPathArr
+	}
 }
