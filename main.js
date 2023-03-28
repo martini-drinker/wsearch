@@ -9,11 +9,9 @@ function wsearch(valueRegexp, options) {
 		types = [...types, ...options?.types]
 	}
 
-	types = new RegExp(`^\\[object\\s(${types.join(`|`)})\\]$`, `i`);
-
 	let params = {
 		target: options?.target || window,
-		types: types,
+		types: new RegExp(`^\\[object\\s(${types.join(`|`)})\\]$`, `i`),
 		functions: options?.functions ? true : false
 	};
 
@@ -29,7 +27,7 @@ function wsearch(valueRegexp, options) {
 
 	window.wsearchObj.v = false;
 
-	return results
+	return results;
 
 	function wsearchRecursion(valueRegexp, obj, findPathArr = [], path = ``) {
 		let currLevel = {
@@ -87,7 +85,11 @@ function wsearch(valueRegexp, options) {
 
 				let curPath = path + currLevel.key.replace(`key`, key);
 
-				if (typeof currLevel.obj[key] === `string` || typeof currLevel.obj[key] === `number` || (params.functions && typeof currLevel.obj[key] === `function`)) {
+				if (
+					typeof currLevel.obj[key] === `string`
+					|| typeof currLevel.obj[key] === `number`
+					|| (params.functions && typeof currLevel.obj[key] === `function`)
+				) {
 					if (`${currLevel.obj[key]}`.match(valueRegexp)) {
 						findPathArr.push([curPath, currLevel.obj[key]]);
 					}
