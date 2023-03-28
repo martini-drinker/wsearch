@@ -19,7 +19,7 @@ function wsearch(valueRegexp, options) {
 		window.wsearchObj = {v: true};
 	}
 
-	let result;
+	let results;
 
 	try {
 		results = wsearchRecursion(valueRegexp, params.target);
