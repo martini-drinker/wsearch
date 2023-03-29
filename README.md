@@ -27,7 +27,7 @@ In the course of work, new properties will be added to the objects in the search
 ## Customizing
 You can add custom options to searching in second argument of function.
 List of options:
-- `target`: object (default: `window`)
+- `target`: object (default: `window` (in browser version))
 ```
 	Search by custom object (any object supporting for ... in loop iterates)
 ```
