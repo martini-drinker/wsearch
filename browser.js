@@ -1,6 +1,8 @@
 function wsearch(valueRegexp, options) {
 	console.log(`manual: https://github.com/martini-drinker/wsearch\n...searching...`);
 
+	let wsearchObj = {v: true};
+
 	let types = [`Window`, `Object`, `Array`, `Set`, `Map`];
 
 	if (options?.typesSet === `all`) {
@@ -14,12 +16,9 @@ function wsearch(valueRegexp, options) {
 	let params = {
 		target: options?.target || window,
 		types: new RegExp(`^\\[object\\s(${types.join(`|`)})\\]$`, `i`),
-		functions: options?.functions ? true : false
+		functions: options?.functions ? true : false,
+		varName: options?.varName || `wsearchWasHere`
 	};
-
-	if (!window.wsearchObj?.v) {
-		window.wsearchObj = {v: true};
-	}
 
 	let results;
 
@@ -27,7 +26,7 @@ function wsearch(valueRegexp, options) {
 		results = wsearchRecursion(params.target);
 	} catch (e) { }
 
-	window.wsearchObj.v = false;
+	wsearchObj.v = false;
 
 	return results;
 
@@ -39,11 +38,11 @@ function wsearch(valueRegexp, options) {
 		try {
 			let type = Object.prototype.toString.call(obj).match(params.types);
 
-			if (!type || obj?.wsearchWasHere?.v) {
+			if (!type || (obj[params.varName] && obj[params.varName].v)) {
 				return
 			}
 
-			obj.wsearchWasHere = window.wsearchObj;
+			obj[params.varName] = wsearchObj;
 
 			switch (type[1]) {
 			case `Set`:
@@ -98,7 +97,7 @@ function wsearch(valueRegexp, options) {
 
 		for (let key of keyArr) {
 			try {
-				if (key === `wsearchWasHere` || key === `wsearchObj`) {
+				if (key === params.varName) {
 					continue
 				}
 
@@ -108,7 +107,7 @@ function wsearch(valueRegexp, options) {
 					typeof currLevel.obj[key] === `string`
 					|| typeof currLevel.obj[key] === `number`
 					|| (params.functions && typeof currLevel.obj[key] === `function`)
-					) {
+				) {
 					let match = `${currLevel.obj[key]}`.match(valueRegexp);
 
 					if (match) {
