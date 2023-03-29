@@ -1,5 +1,5 @@
-# windowSearch
-Simple JS function to find some values in window object on page.
+# wsearch
+Simple JS function to find some values in objects.
 ## Basic usage
 Put JS code from main.js (or main.min.js) to target page. Use RegExp.
 ```js
