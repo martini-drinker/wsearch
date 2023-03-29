@@ -1,5 +1,7 @@
-function wsearch(valueRegexp, options) {
-	if (!options?.target) {
+function wsearch(valueRegexp, target, options) {
+	if (!target) {
+		console.log(`manual: https://github.com/martini-drinker/wsearch`);
+
 		return
 	}
 
@@ -16,7 +18,6 @@ function wsearch(valueRegexp, options) {
 	}
 
 	let params = {
-		target: options.target,
 		types: new RegExp(`^\\[object\\s(${types.join(`|`)})\\]$`, `i`),
 		functions: options?.functions ? true : false,
 		varName: options?.varName || `wsearchWasHere`
@@ -25,7 +26,7 @@ function wsearch(valueRegexp, options) {
 	let results;
 
 	try {
-		results = wsearchRecursion(params.target);
+		results = wsearchRecursion(target);
 	} catch (e) { }
 
 	wsearchObj.v = false;
