@@ -1,5 +1,5 @@
 function wsearch(valueRegexp, options) {
-	console.log(`manual: https://github.com/martini-drinker/wearch\n...searching...`);
+	console.log(`manual: https://github.com/martini-drinker/wsearch\n...searching...`);
 
 	let types = [`Window`, `Object`, `Array`, `Set`, `Map`];
 
