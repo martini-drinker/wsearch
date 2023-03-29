@@ -44,4 +44,4 @@ List of options:
 ```
 ## Info
 In the course of work, new properties will be added to the objects in the search.
-Refresh the page to clear them.
+Refresh the page to clear them or clone object before searching.
