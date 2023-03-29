@@ -12,7 +12,7 @@ Put JS code from browser.js to target page.
 ## Basic usage
 Use RegExp to search.
 ```js
-wsearch(/Hello\sworld/);
+wsearch(/Hello\sworld/, {target: window});
 ```
 Output:
 ```
@@ -23,9 +23,6 @@ Output:
 ```
 ## Customizing
 You can add custom options to searching in second argument of function. For example:
-```js
-wsearch(/Hello\sworld/, {functions: true});
-```
 List of options:
 - `target`: object (default `window`)
 ```
