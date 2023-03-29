@@ -22,7 +22,7 @@ Output:
 ]
 ```
 ## Customizing
-You can add custom options to searching in second argument of function. For example:
+You can add custom options to searching in second argument of function.
 List of options:
 - `target`: object (default `window`)
 ```
