@@ -21,6 +21,9 @@ Output:
 	...
 ]
 ```
+## Info
+In the course of work, new properties will be added to the objects in the search.
+Сlone the object to prevent this before searching.
 ## Customizing
 You can add custom options to searching in second argument of function.
 List of options:
@@ -48,6 +51,8 @@ List of options:
 	With this parameter search will be performed in all prototypes that are found and will take a very long time.
 	Most of the time this option value is not needed.
 ```
-## Info
-In the course of work, new properties will be added to the objects in the search.
-Refresh the page to clear them or clone object before searching.
+## Output
+```
+If path to value includes Map object, property of this object transform to string.
+If the properties match, at the end of the property name adding hash and unique number: `#(n > 0)`
+```
