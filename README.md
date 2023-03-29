@@ -7,12 +7,12 @@ npm i wsearch
 ```
 - from browser
 ```
-Put JS code from browser.js to target page.
+Put JS function code from package.js to target page.
 ```
 ## Basic usage
-Use RegExp to search.
+First argument: RegExp to search in values. Second: any object supporting for ... in loop iterates.
 ```js
-wsearch(/Hello\sworld/, {target: window});
+wsearch(/Hello\sworld/, window);
 ```
 Output:
 ```
@@ -25,12 +25,11 @@ Output:
 In the course of work, new properties will be added to the objects in the search.
 Сlone the object to prevent this before searching.
 ## Customizing
-You can add custom options to searching in second argument of function.
+You can add custom options to searching in third argument of function. For example:
+```js
+wsearch(/Hello\sworld/, window, {functions: true});
+```
 List of options:
-- `target`: object (default in browser version: `window`)
-```
-	Search by custom object (any object supporting for ... in loop iterates)
-```
 - `functions`: true OR false (default)
 ```
 	Add functions body to search.
