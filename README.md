@@ -1,5 +1,5 @@
 # wsearch
-Simple JS function to find some values in objects.
+Simple JS function to find closest values in objects.
 ## Installation
 - from package manager
 ```
