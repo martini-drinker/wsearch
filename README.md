@@ -40,9 +40,7 @@ Object.prototype.toString.call(object);
 - `typesSet`: array of string OR "all"
 > Replace defaults types with custom.
 >
->***WARNING!*** Use value "all" very carefully. With this parameter search will be performed in all prototypes that are found and will take a very long time.
->
->Most of the time this option value is not needed.
+>***WARNING!*** Use value "all" very carefully. With this parameter search will be performed in all prototypes that are found and will take a very long time. Most of the time this option value is not needed.
 - `varName`: string (default: `"wsearchWasHere"`)
 > The property name to be added to the objects in search.
 ## Output
