@@ -1,5 +1,9 @@
 function wsearch(valueRegexp, options) {
-	console.log(`manual: https://github.com/martini-drinker/windowSearch\n...searching...`);
+	if (!options?.target) {
+		return
+	}
+
+	let window = {};
 
 	let types = [`Window`, `Object`, `Array`, `Set`, `Map`];
 
@@ -12,7 +16,7 @@ function wsearch(valueRegexp, options) {
 	}
 
 	let params = {
-		target: options?.target || window,
+		target: options.target,
 		types: new RegExp(`^\\[object\\s(${types.join(`|`)})\\]$`, `i`),
 		functions: options?.functions ? true : false
 	};
@@ -125,3 +129,5 @@ function wsearch(valueRegexp, options) {
 		return findPathArr
 	}
 }
+
+module.exports = wsearch;

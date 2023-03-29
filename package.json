@@ -1,0 +1,25 @@
+{
+  "name": "wsearch",
+  "version": "1.0.0",
+  "description": "Simple function to find some values in objects.",
+  "main": "npm.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/martini-drinker/wsearch.git"
+  },
+  "keywords": [
+    "search",
+    "find",
+    "object",
+    "value"
+  ],
+  "author": "martini-drinker",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/martini-drinker/wsearch/issues"
+  },
+  "homepage": "https://github.com/martini-drinker/wsearch#readme"
+}
