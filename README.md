@@ -3,7 +3,7 @@ Simple JS function to find closest values in objects.
 ## Installation
 - from package manager
 ```
-npm install wsearch
+npm i wsearch
 ```
 - from browser
 ```
