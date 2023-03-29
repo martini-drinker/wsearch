@@ -1,7 +1,16 @@
 # wsearch
 Simple JS function to find some values in objects.
+## Installation
+- from package manager
+```
+npm install wsearch
+```
+- from browser
+```
+Put JS code from browser.js to target page.
+```
 ## Basic usage
-Put JS code from main.js (or main.min.js) to target page. Use RegExp.
+Use RegExp to search.
 ```js
 wsearch(/Hello\sworld/);
 ```
@@ -28,7 +37,7 @@ List of options:
 ```
 - `typesAdd`: array of string (default: `["Window", "Object", "Array", "Set", "Map"]`)
 ```
-	Add custom types to defaults. You can get type of any object:
+	Add custom types to defaults (like "Location", "Navigator" etc.). You can get type of any object:
 ```
 
 ```js
