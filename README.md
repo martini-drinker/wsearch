@@ -11,7 +11,7 @@ const wsearch = require(`wsearch`);
 ```
 - from browser DevTools
 ```
-Put JS function code from package.js to target page console.
+Put JS function code from package.js to the target page console.
 ```
 ## Basic usage
 Default search types: `["Window", "Object", "Array", "Set", "Map"]`
@@ -51,4 +51,5 @@ Output:
 ## Info
 In the course of work, new properties will be added to the objects in the search.
 Сlone the object to prevent this before searching.
-If the found path includes Map object, property of this object transform to string and at the end adding hash with unique number: `#(n >= 0)`
+
+If the found path includes Map/Set object, access to the properties of these objects will be performed through an array with index valid at the time of the search.
