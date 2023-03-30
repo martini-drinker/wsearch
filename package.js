@@ -79,7 +79,7 @@ function wsearch(valueRegexp, target, options) {
 
 					currLevelMap.set(key, {
 						value: obj[key],
-						path: `${path}[\`${key}\`]`
+						path: type === `array` ? `${path}[${key}]` : `${path}[\`${key}\`]`
 					});
 				}
 			}
@@ -111,9 +111,7 @@ function wsearch(valueRegexp, target, options) {
 				} else {
 					wsearchRecursion(keyObj.value, findPathArr, keyObj.path);
 				}
-			} catch (e) {
-				continue
-			}
+			} catch (e) { }
 		}
 
 		return findPathArr
