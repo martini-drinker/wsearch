@@ -1,6 +1,6 @@
 {
   "name": "wsearch",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Simple function to find some values in objects.",
   "main": "package.js",
   "scripts": {
