@@ -23,6 +23,8 @@ wsearch(query, target[, options])
 - `options` \<Object\>
 	- `functions` \<boolean\> Default: `false`
 		> Add functions body to search.
+	- `varName` \<string\> Default: `"wsearchWasHere"`
+		> The property name to be added to the objects in search.
 	- `typesAdd` \<Array\>
 		> Add custom types to defaults (like "Location", "Navigator" etc.). You can get type of any object:
 		```js
@@ -32,8 +34,7 @@ wsearch(query, target[, options])
 		> Replace defaults types with custom.
 		>
 		> ***WARNING!*** Use parameter "all" very carefully. With this parameter search will be performed in all prototypes that are found and will take a very long time. Most of the time this option value is not needed.
-	- `varName` \<string\> Default: `"wsearchWasHere"`
-		> The property name to be added to the objects in search.
+	
 - Returns: \<Array\>
 
 For example:
