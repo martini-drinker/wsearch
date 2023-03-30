@@ -18,8 +18,8 @@ Default search types: `["Window", "Object", "Array", "Set", "Map"]`
 ```
 wsearch(query, target[, options])
 ```
-- `query` \<RegExp\> search query
-- `target` \<Object\> object to search supporting for ... in loop iterates
+- `query` \<RegExp\> Search query
+- `target` \<Object\> Object to search supporting for ... in loop iterates
 - `options` \<Object\>
 	- `functions` \<boolean\> Default: `false`
 		> Add functions body to search.
