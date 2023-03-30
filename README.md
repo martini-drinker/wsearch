@@ -14,24 +14,26 @@ const wsearch = require(`wsearch`);
 Put JS function code from package.js to the target page console.
 ```
 ## Basic usage
-Default search types: `["Window", "Object", "Array", "Set", "Map"]`
 ```
-wsearch(query, target[, options])
+wsearch(query, {target}[, options])
 ```
+> Nesting target in the object with a single property is ***required*** for valid path in output.
+>
+> Default search prototypes: `["Window", "Object", "Array", "Set", "Map"]`
 - `query` \<RegExp\> Search query
-- `target` \<Object\> Object to search supporting for ... in loop iterates
+- `target` \<Object\> | \<Array\> | etc. Object with any prototype to search
 - `options` \<Object\>
 	- `functions` \<boolean\> Default: `false`
 		> Add functions body to search.
 	- `varName` \<string\> Default: `"wsearchWasHere"`
 		> The property name to be added to the objects in search.
 	- `typesAdd` \<Array\>
-		> Add custom types to defaults (like "Location", "Navigator" etc.). You can get type of any object:
+		> Add prototypes to defaults (like "Location", "Navigator" etc.). You can get type of any object:
 		```js
 		Object.prototype.toString.call(object);
 		```
 	- `typesSet` \<Array\> | "all"
-		> Replace defaults types with custom.
+		> Replace defaults prototypes.
 		>
 		> ***WARNING!*** Use parameter "all" very carefully. With this parameter search will be performed in all prototypes that are found and will take a very long time. Most of the time this option value is not needed.
 	
@@ -39,7 +41,7 @@ wsearch(query, target[, options])
 
 For example:
 ```js
-wsearch(/Hello\sworld/, window);
+wsearch(/Hello\sworld/, {window});
 ```
 Output:
 ```
