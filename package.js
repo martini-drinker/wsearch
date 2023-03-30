@@ -1,7 +1,9 @@
 function wsearch(valueRegexp, target, options) {
-	if (!target) {
-		console.log(`manual: https://github.com/martini-drinker/wsearch`);
+	let targetName = Object.keys(target)[0];
 
+	target = target[targetName];
+
+	if (!target) {
 		return
 	}
 
@@ -33,8 +35,8 @@ function wsearch(valueRegexp, target, options) {
 
 	return results;
 
-	function wsearchRecursion(obj, findPathArr = [], path = ``) {
-		let currLevel;
+	function wsearchRecursion(obj, findPathArr = [], path = targetName) {
+		let currLevelMap = new Map();
 
 		let keyArr = [];
 
@@ -47,50 +49,44 @@ function wsearch(valueRegexp, target, options) {
 
 			obj[params.varName] = wsearchObj;
 
-			switch (type[1]) {
-			case `Set`:
-				currLevel = {
-					obj: Array.from(obj),
-					key: `.has(\`key\`)`
-				};
+			type = type[1].toLowerCase();
 
-				break;
-			case `Map`:
-				let objFromMap = {};
-				let counter = {};
+			if (type === `set`) {
+				let keys = [...obj].filter(i => (typeof i).match(/^(?:string|number|boolean|function)$/));
 
-				for (let i of obj.entries()) {
-					if (!objFromMap[i[0]]) {
-						objFromMap[i[0]] = i[1];
-					} else {
-						if (!counter[i[0]]) {
-							counter[i[0]] = 0;
-						}
+				for (let i = 0; i < keys.length; ++i) {
+					keyArr.push(keys[i]);
 
-						objFromMap[`${i[0]}#${++counter[i[0]]}`] = i[1];
-					}
+					currLevelMap.set(keys[i], {
+						value: keys[i],
+						path: `[...${path}][${i}]`
+					});
 				}
+			} else if (type === `map`) {
+				let keys = [...obj.keys()];
 
-				currLevel = {
-					obj: objFromMap,
-					key: `.get(\`key\`)`
-				};
+				for (let i = 0; i < keys.length; ++i) {
+					keyArr.push(keys[i]);
 
-				break;
-			default:
-				currLevel = {
-					obj: obj,
-					key: `[\`key\`]`
-				};
-			}
+					currLevelMap.set(keys[i], {
+						value: obj.get(keys[i]),
+						path: `[...${path}.values()][${i}]`
+					});
+				}
+			} else {
+				for (let key in obj) {
+					keyArr.push(key);
 
-			for (let key in currLevel.obj) {
-				keyArr.push(key);
+					currLevelMap.set(key, {
+						value: obj[key],
+						path: `${path}[\`${key}\`]`
+					});
+				}
 			}
 
 			keyArr.sort((a, b) => {
-				let t1 = typeof currLevel.obj[a] === `object` ? -1 : 0;
-				let t2 = typeof currLevel.obj[b] === `object` ? -1 : 0;
+				let t1 = typeof currLevelMap.get(a).value === `object` ? -1 : 0;
+				let t2 = typeof currLevelMap.get(b).value === `object` ? -1 : 0;
 
 				return t1 - t2
 			});
@@ -104,20 +100,16 @@ function wsearch(valueRegexp, target, options) {
 					continue
 				}
 
-				let curPath = path + currLevel.key.replace(`key`, key);
+				let keyObj = currLevelMap.get(key);
 
-				if (
-					typeof currLevel.obj[key] === `string`
-					|| typeof currLevel.obj[key] === `number`
-					|| (params.functions && typeof currLevel.obj[key] === `function`)
-				) {
-					let match = `${currLevel.obj[key]}`.match(valueRegexp);
+				if ((typeof keyObj.value).match(new RegExp(`^(?:string|number|boolean${params.functions ? `|function` : ``})$`))) {
+					let match = `${keyObj.value}`.match(valueRegexp);
 
 					if (match) {
-						findPathArr.push([curPath, match]);
+						findPathArr.push([keyObj.path, match]);
 					}
 				} else {
-					wsearchRecursion(currLevel.obj[key], findPathArr, curPath);
+					wsearchRecursion(keyObj.value, findPathArr, keyObj.path);
 				}
 			} catch (e) {
 				continue
