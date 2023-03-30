@@ -52,12 +52,12 @@ function wsearch(valueRegexp, target, options) {
 			type = type[1].toLowerCase();
 
 			if (type === `set`) {
-				let keys = [...obj].filter(i => (typeof i).match(/^(?:string|number|boolean|function)$/));
+				let keys = [...obj];
 
 				for (let i = 0; i < keys.length; ++i) {
-					keyArr.push(keys[i]);
+					keyArr.push(i);
 
-					currLevelMap.set(keys[i], {
+					currLevelMap.set(i, {
 						value: keys[i],
 						path: `[...${path}][${i}]`
 					});
