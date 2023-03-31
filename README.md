@@ -1,5 +1,5 @@
 # wsearch
-Simple JS function to find closest values in objects.
+Simple JS function to find values (or properties) in objects by RegExp.
 ## Installation
 - from package manager
 ```
@@ -23,6 +23,8 @@ wsearch(query, {target}[, options])
 - `query` \<RegExp\> Search query
 - `target` \<Object\> | \<Array\> | etc. Object with any prototype to search
 - `options` \<Object\>
+	- `byProp` \<boolean\> Default: `false`
+		> Searching by properties name
 	- `functions` \<boolean\> Default: `false`
 		> Add functions body to search.
 	- `varName` \<string\> Default: `"wsearchWasHere"`
