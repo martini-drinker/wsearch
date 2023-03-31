@@ -24,7 +24,7 @@ wsearch(query, {target}[, options])
 - `target` \<Object\> | \<Array\> | etc. Object with any prototype to search
 - `options` \<Object\>
 	- `byProp` \<boolean\> Default: `false`
-		> Searching by properties name
+		> Searching by properties name.
 	- `functions` \<boolean\> Default: `false`
 		> Add functions body to search.
 	- `varName` \<string\> Default: `"wsearchWasHere"`
