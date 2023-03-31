@@ -1,6 +1,6 @@
 {
   "name": "wsearch",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "Simple function to find some values in objects.",
   "main": "package.js",
   "scripts": {
@@ -15,7 +15,8 @@
     "search",
     "find",
     "object",
-    "value"
+    "value",
+    "property"
   ],
   "author": "martini-drinker",
   "license": "ISC",
