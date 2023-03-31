@@ -83,13 +83,6 @@ function wsearch(searchRegexp, target, options) {
 					});
 				}
 			}
-
-			arr.sort((a, b) => {
-				let t1 = typeof a.value === `object` ? -1 : 0;
-				let t2 = typeof b.value === `object` ? -1 : 0;
-
-				return t1 - t2
-			});
 		} catch (e) {
 			return
 		}
