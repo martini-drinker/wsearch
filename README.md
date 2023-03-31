@@ -53,7 +53,6 @@ Output:
 ]
 ```
 ## Info
-In the course of work, new properties will be added to the objects in the search.
-Сlone the object to prevent this before searching.
+In the course of work, new properties will be added to the objects in the search. Сlone the target object to prevent this before searching.
 
 If the found path includes Map/Set object, access to the properties of these objects will be performed through an array with index valid at the time of the search.
