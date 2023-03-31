@@ -3,10 +3,6 @@ function wsearch(valueRegexp, target, options) {
 
 	target = target[targetName];
 
-	if (!target) {
-		return
-	}
-
 	let wsearchObj = {v: true};
 
 	let types = [`Window`, `Object`, `Array`, `Set`, `Map`];
@@ -33,7 +29,7 @@ function wsearch(valueRegexp, target, options) {
 
 	wsearchObj.v = false;
 
-	return results;
+	return results || [];
 
 	function wsearchRecursion(obj, findPathArr = [], path = targetName) {
 		let currLevelMap = new Map();
