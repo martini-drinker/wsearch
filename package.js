@@ -1,4 +1,4 @@
-function wsearch(valueRegexp, target, options) {
+function wsearch(searchRegexp, target, options) {
 	let targetName = Object.keys(target)[0];
 
 	target = target[targetName];
@@ -18,7 +18,8 @@ function wsearch(valueRegexp, target, options) {
 	let params = {
 		types: new RegExp(`^\\[object\\s(${types.join(`|`)})\\]$`, `i`),
 		functions: options?.functions ? true : false,
-		varName: options?.varName || `wsearchWasHere`
+		varName: options?.varName || `wsearchWasHere`,
+		byProp: options?.byProp ? true : false
 	};
 
 	let results;
@@ -32,7 +33,7 @@ function wsearch(valueRegexp, target, options) {
 	return results || [];
 
 	function wsearchRecursion(obj, findPathArr = [], path = targetName) {
-		let keyArr = [];
+		let arr = [];
 
 		try {
 			let type = Object.prototype.toString.call(obj).match(params.types);
@@ -49,35 +50,41 @@ function wsearch(valueRegexp, target, options) {
 				let keys = [...obj];
 
 				for (let i = 0; i < keys.length; ++i) {
-					keyArr.push({
+					arr.push({
+						key: keys[i],
 						value: keys[i],
 						path: `[...${path}][${i}]`
 					});
 				}
 			} else if (type === `map`) {
-				let keys = [...obj.entries()];
+				let entries = [...obj.entries()];
 
-				for (let i = 0; i < keys.length; ++i) {
-					keyArr.push({
-						value: keys[i][0],
-						path: `[...${path}.keys()][${i}]`
-					});
+				for (let i = 0; i < entries.length; ++i) {
+					if (!isPrimitive(entries[i][0])) {
+						arr.push({
+							key: entries[i][0],
+							value: entries[i][0],
+							path: `[...${path}.keys()][${i}]`
+						});
+					}
 
-					keyArr.push({
-						value: keys[i][1],
+					arr.push({
+						key: entries[i][0],
+						value: entries[i][1],
 						path: `[...${path}.values()][${i}]`
 					});
 				}
 			} else {
 				for (let key in obj) {
-					keyArr.push({
+					arr.push({
+						key: key,
 						value: obj[key],
 						path: type === `array` ? `${path}[${key}]` : `${path}[\`${key}\`]`
 					});
 				}
 			}
 
-			keyArr.sort((a, b) => {
+			arr.sort((a, b) => {
 				let t1 = typeof a.value === `object` ? -1 : 0;
 				let t2 = typeof b.value === `object` ? -1 : 0;
 
@@ -87,25 +94,41 @@ function wsearch(valueRegexp, target, options) {
 			return
 		}
 
-		for (let key of keyArr) {
+		for (let elem of arr) {
 			try {
-				if (key === params.varName) {
+				if (elem.key === params.varName) {
 					continue
 				}
 
-				if ((typeof key.value).match(new RegExp(`^(?:string|number|boolean${params.functions ? `|function` : ``})$`))) {
-					let match = `${key.value}`.match(valueRegexp);
+				if (params.byProp && isPrimitive(elem.key)) {
+					let match = `${elem.key}`.match(searchRegexp);
 
 					if (match) {
-						findPathArr.push([key.path, match]);
+						findPathArr.push([elem.path, match]);
+					}
+				}
+
+				if (isPrimitive(elem.value)) {
+					if (!params.byProp) {
+						let match = `${elem.value}`.match(searchRegexp);
+
+						if (match) {
+							findPathArr.push([elem.path, match]);
+						}
 					}
 				} else {
-					wsearchRecursion(key.value, findPathArr, key.path);
+					wsearchRecursion(elem.value, findPathArr, elem.path);
 				}
 			} catch (e) { }
 		}
 
 		return findPathArr
+	}
+
+	function isPrimitive(value) {
+		if ( (params.functions && typeof value === `function`) || value !== Object(value) ) {
+			return true
+		}
 	}
 }
 
