@@ -32,8 +32,6 @@ function wsearch(valueRegexp, target, options) {
 	return results || [];
 
 	function wsearchRecursion(obj, findPathArr = [], path = targetName) {
-		let currLevelMap = new Map();
-
 		let keyArr = [];
 
 		try {
@@ -51,29 +49,28 @@ function wsearch(valueRegexp, target, options) {
 				let keys = [...obj];
 
 				for (let i = 0; i < keys.length; ++i) {
-					keyArr.push(i);
-
-					currLevelMap.set(i, {
+					keyArr.push({
 						value: keys[i],
 						path: `[...${path}][${i}]`
 					});
 				}
 			} else if (type === `map`) {
-				let keys = [...obj.keys()];
+				let keys = [...obj.entries()];
 
 				for (let i = 0; i < keys.length; ++i) {
-					keyArr.push(keys[i]);
+					keyArr.push({
+						value: keys[i][0],
+						path: `[...${path}.keys()][${i}]`
+					});
 
-					currLevelMap.set(keys[i], {
-						value: obj.get(keys[i]),
+					keyArr.push({
+						value: keys[i][1],
 						path: `[...${path}.values()][${i}]`
 					});
 				}
 			} else {
 				for (let key in obj) {
-					keyArr.push(key);
-
-					currLevelMap.set(key, {
+					keyArr.push({
 						value: obj[key],
 						path: type === `array` ? `${path}[${key}]` : `${path}[\`${key}\`]`
 					});
@@ -81,8 +78,8 @@ function wsearch(valueRegexp, target, options) {
 			}
 
 			keyArr.sort((a, b) => {
-				let t1 = typeof currLevelMap.get(a).value === `object` ? -1 : 0;
-				let t2 = typeof currLevelMap.get(b).value === `object` ? -1 : 0;
+				let t1 = typeof a.value === `object` ? -1 : 0;
+				let t2 = typeof b.value === `object` ? -1 : 0;
 
 				return t1 - t2
 			});
@@ -96,16 +93,14 @@ function wsearch(valueRegexp, target, options) {
 					continue
 				}
 
-				let keyObj = currLevelMap.get(key);
-
-				if ((typeof keyObj.value).match(new RegExp(`^(?:string|number|boolean${params.functions ? `|function` : ``})$`))) {
-					let match = `${keyObj.value}`.match(valueRegexp);
+				if ((typeof key.value).match(new RegExp(`^(?:string|number|boolean${params.functions ? `|function` : ``})$`))) {
+					let match = `${key.value}`.match(valueRegexp);
 
 					if (match) {
-						findPathArr.push([keyObj.path, match]);
+						findPathArr.push([key.path, match]);
 					}
 				} else {
-					wsearchRecursion(keyObj.value, findPathArr, keyObj.path);
+					wsearchRecursion(key.value, findPathArr, key.path);
 				}
 			} catch (e) { }
 		}
@@ -114,4 +109,4 @@ function wsearch(valueRegexp, target, options) {
 	}
 }
 
-module.exports = wsearch;
+//module.exports = wsearch;
