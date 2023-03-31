@@ -1,5 +1,5 @@
 # wsearch
-Simple JS function to find values (or properties) in objects by RegExp.
+Simple JS function to search values (or properties) in objects by RegExp.
 ## Installation
 - from package manager
 ```
