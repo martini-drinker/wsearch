@@ -3,7 +3,7 @@ function wsearch(searchRegexp, target, options) {
 
 	target = target[targetName];
 
-	let wsearchObj = {v: true};
+	let wsearchObj = [true];
 
 	let types = [`Window`, `Object`, `Array`, `Set`, `Map`];
 
@@ -28,7 +28,7 @@ function wsearch(searchRegexp, target, options) {
 		results = wsearchRecursion(target);
 	} catch (e) { }
 
-	wsearchObj.v = false;
+	wsearchObj[0] = false;
 
 	return results || [];
 
@@ -38,7 +38,7 @@ function wsearch(searchRegexp, target, options) {
 		try {
 			let type = Object.prototype.toString.call(obj).match(params.types);
 
-			if (!type || (obj[params.varName] && obj[params.varName].v)) {
+			if (!type || (obj[params.varName] && obj[params.varName][0])) {
 				return
 			}
 
@@ -89,11 +89,11 @@ function wsearch(searchRegexp, target, options) {
 
 		for (let elem of arr) {
 			try {
-				if (elem.key === params.varName) {
-					continue
-				}
-
 				if (params.byProp && isPrimitive(elem.key)) {
+					if (elem.key === params.varName) {
+						continue
+					}
+					
 					let match = `${elem.key}`.match(searchRegexp);
 
 					if (match) {
