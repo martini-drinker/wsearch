@@ -109,4 +109,4 @@ function wsearch(valueRegexp, target, options) {
 	}
 }
 
-//module.exports = wsearch;
+module.exports = wsearch;
