@@ -68,12 +68,20 @@ function wsearch(searchRegexp, target, options) {
 						path: `[...${path}.values()][${i}]`
 					});
 				}
+			} else if (obj instanceof Array) {
+				for (let i = 0; i < obj.length; ++i) {
+					arr.push({
+						key: i,
+						value: obj[i],
+						path: `${path}[${i}]`
+					});
+				}
 			} else {
 				for (let key in obj) {
 					arr.push({
 						key: key,
 						value: obj[key],
-						path: obj instanceof Array ? `${path}[${key}]` : `${path}[\`${key}\`]`
+						path: `${path}[\`${key}\`]`
 					});
 				}
 			}
