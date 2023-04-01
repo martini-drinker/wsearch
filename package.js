@@ -17,7 +17,7 @@ function wsearch(searchRegexp, target, options) {
 	}
 
 	let params = {
-		types: new RegExp(`^\\[object\\s(${types.join(`|`)})\\]$`, `i`),
+		types: new RegExp(`^\\[object\\s(?:${types.join(`|`)})\\]$`, `i`),
 		functions: options?.functions ? true : false,
 		byProp: options?.byProp ? true : false
 	};
@@ -34,17 +34,13 @@ function wsearch(searchRegexp, target, options) {
 		let arr = [];
 
 		try {
-			let type = Object.prototype.toString.call(obj).match(params.types);
-
-			if (!type || set.has(obj)) {
+			if (!Object.prototype.toString.call(obj).match(params.types) || set.has(obj)) {
 				return
 			}
 
 			set.add(obj);
 
-			type = type[1].toLowerCase();
-
-			if (type === `set`) {
+			if (obj instanceof Set) {
 				let keys = [...obj];
 
 				for (let i = 0; i < keys.length; ++i) {
@@ -54,7 +50,7 @@ function wsearch(searchRegexp, target, options) {
 						path: `[...${path}][${i}]`
 					});
 				}
-			} else if (type === `map`) {
+			} else if (obj instanceof Map) {
 				let entries = [...obj.entries()];
 
 				for (let i = 0; i < entries.length; ++i) {
@@ -77,7 +73,7 @@ function wsearch(searchRegexp, target, options) {
 					arr.push({
 						key: key,
 						value: obj[key],
-						path: type === `array` ? `${path}[${key}]` : `${path}[\`${key}\`]`
+						path: obj instanceof Array ? `${path}[${key}]` : `${path}[\`${key}\`]`
 					});
 				}
 			}
