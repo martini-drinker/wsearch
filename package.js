@@ -6,7 +6,7 @@ function wsearch(searchRegexp, target, options) {
 	let set = new Set();
 	let setFunc = new Set();
 
-	let types = [`Window`, `Object`, `Array`, `Set`, `Map`];
+	let types = [`Window`, `Object`, `Array`, `Set`, `Map`, `Function`];
 
 	if (options?.typesSet === `all`) {
 		types = [`.+`];
