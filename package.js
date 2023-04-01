@@ -22,93 +22,81 @@ function wsearch(searchRegexp, target, options) {
 		byProp: options?.byProp ? true : false
 	};
 
-	let results;
-
-	try {
-		results = wsearchRecursion(target);
-	} catch (e) { }
-
-	return results || [];
+	return wsearchRecursion(target) || [];
 
 	function wsearchRecursion(obj, findPathArr = [], path = targetName) {
 		let arr = [];
 
-		try {
-			if (!Object.prototype.toString.call(obj).match(params.types) || set.has(obj)) {
-				return
-			}
-
-			set.add(obj);
-
-			if (obj instanceof Set) {
-				let keys = [...obj];
-
-				for (let i = 0; i < keys.length; ++i) {
-					arr.push({
-						key: keys[i],
-						value: keys[i],
-						path: `[...${path}][${i}]`
-					});
-				}
-			} else if (obj instanceof Map) {
-				let entries = [...obj.entries()];
-
-				for (let i = 0; i < entries.length; ++i) {
-					if (!isPrimitive(entries[i][0])) {
-						arr.push({
-							key: entries[i][0],
-							value: entries[i][0],
-							path: `[...${path}.keys()][${i}]`
-						});
-					}
-
-					arr.push({
-						key: entries[i][0],
-						value: entries[i][1],
-						path: `[...${path}.values()][${i}]`
-					});
-				}
-			} else {
-				for (let key in obj) {
-					arr.push({
-						key: key,
-						value: obj[key],
-						path: obj instanceof Array ? `${path}[${key}]` : `${path}[\`${key}\`]`
-					});
-				}
-			}
-		} catch (e) {
+		if (!Object.prototype.toString.call(obj).match(params.types) || set.has(obj)) {
 			return
 		}
 
+		set.add(obj);
+
+		if (obj instanceof Set) {
+			let keys = [...obj];
+
+			for (let i = 0; i < keys.length; ++i) {
+				arr.push({
+					key: keys[i],
+					value: keys[i],
+					path: `[...${path}][${i}]`
+				});
+			}
+		} else if (obj instanceof Map) {
+			let entries = [...obj.entries()];
+
+			for (let i = 0; i < entries.length; ++i) {
+				if (!isPrimitive(entries[i][0])) {
+					arr.push({
+						key: entries[i][0],
+						value: entries[i][0],
+						path: `[...${path}.keys()][${i}]`
+					});
+				}
+
+				arr.push({
+					key: entries[i][0],
+					value: entries[i][1],
+					path: `[...${path}.values()][${i}]`
+				});
+			}
+		} else {
+			for (let key in obj) {
+				arr.push({
+					key: key,
+					value: obj[key],
+					path: obj instanceof Array ? `${path}[${key}]` : `${path}[\`${key}\`]`
+				});
+			}
+		}
+
 		for (let elem of arr) {
-			try {
-				if (params.byProp) {
-					if (isPrimitive(elem.key)) {
-						pathCheckPush(elem.key, elem.path, findPathArr);
-					} else if (params.functions && typeof elem.key === `function` && !setFunc.has(elem.key)) {
-						setFunc.add(elem.key);
+			if (params.byProp) {
+				if (isPrimitive(elem.key)) {
+					pathCheckPush(elem.key, elem.path, findPathArr);
+				} else if (params.functions && typeof elem.key === `function` && !setFunc.has(elem.key)) {
+					setFunc.add(elem.key);
 
-						pathCheckPush(elem.key, elem.path, findPathArr);
-					}
+					pathCheckPush(elem.key, elem.path, findPathArr);
 				}
+			}
 
-				if (isPrimitive(elem.value)) {
-					if (!params.byProp) {
-						pathCheckPush(elem.value, elem.path, findPathArr);
-					}
-
-					continue
-				}
-
-				if (!params.byProp && params.functions && typeof elem.value === `function` && !setFunc.has(elem.value)) {
-					setFunc.add(elem.value);
-
+			if (isPrimitive(elem.value)) {
+				if (!params.byProp) {
 					pathCheckPush(elem.value, elem.path, findPathArr);
 				}
 
-				wsearchRecursion(elem.value, findPathArr, elem.path);
-			} catch (e) { }
+				continue
+			}
+
+			if (!params.byProp && params.functions && typeof elem.value === `function` && !setFunc.has(elem.value)) {
+				setFunc.add(elem.value);
+
+				pathCheckPush(elem.value, elem.path, findPathArr);
+			}
+
+			wsearchRecursion(elem.value, findPathArr, elem.path);
 		}
 
 		return findPathArr
