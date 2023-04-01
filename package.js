@@ -85,17 +85,17 @@ function wsearch(searchRegexp, target, options) {
 			try {
 				if (params.byProp) {
 					if (isPrimitive(elem.key)) {
-						pathCheckPush(elem.key, elem.path, findPathArr);
+						pathCheckPush(elem.key, elem, findPathArr);
 					} else if (params.functions && typeof elem.key === `function` && !setFunc.has(elem.key)) {
 						setFunc.add(elem.key);
 
-						pathCheckPush(elem.key, elem.path, findPathArr);
+						pathCheckPush(elem.key, elem, findPathArr);
 					}
 				}
 
 				if (isPrimitive(elem.value)) {
 					if (!params.byProp) {
-						pathCheckPush(elem.value, elem.path, findPathArr);
+						pathCheckPush(elem.value, elem, findPathArr);
 					}
 
 					continue
@@ -104,7 +104,7 @@ function wsearch(searchRegexp, target, options) {
 				if (!params.byProp && params.functions && typeof elem.value === `function` && !setFunc.has(elem.value)) {
 					setFunc.add(elem.value);
 
-					pathCheckPush(elem.value, elem.path, findPathArr);
+					pathCheckPush(elem.value, elem, findPathArr);
 				}
 
 				wsearchRecursion(elem.value, findPathArr, elem.path);
@@ -120,11 +120,16 @@ function wsearch(searchRegexp, target, options) {
 		}
 	}
 
-	function pathCheckPush(value, path, findPathArr) {
+	function pathCheckPush(value, elem, findPathArr) {
 		let match = `${value}`.match(searchRegexp);
 
 		if (match) {
-			findPathArr.push([path, match]);
+			findPathArr.push({
+				path: elem.path,
+				match: match,
+				key: elem.key,
+				value: elem.value
+			});
 		}
 	}
 }
