@@ -48,8 +48,8 @@ Output:
 [
 	{
 		path: <string path to value>,
-		match: <array of matches>},
-		key: <key>
+		match: <array of matches>,
+		key: <key>,
 		value: <value>
 	},
 	...
