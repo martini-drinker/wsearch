@@ -46,7 +46,12 @@ wsearch(/Hello\sworld/, {window});
 Output:
 ```
 [
-	[<string path to value>, <array of matches>],
+	{
+		path: <string path to value>,
+		match: <array of matches>},
+		key: <key>
+		value: <value>
+	},
 	...
 ]
 ```
