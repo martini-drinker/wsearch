@@ -49,7 +49,7 @@ Output:
 	{
 		path: <string path to value>,
 		match: <array of matches>,
-		object: <object>
+		object: <object>,
 		key: <key>,
 		value: <value>
 	},
