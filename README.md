@@ -1,5 +1,5 @@
 # wsearch
-Simple JS function to search values (or properties) in objects by RegExp.
+Simple function to search values (or properties) in objects by RegExp.
 ## Installation
 - from package manager
 ```
@@ -11,7 +11,7 @@ const wsearch = require(`wsearch`);
 ```
 - from browser DevTools
 ```
-Put JS function code from package.js to the target page console.
+Put function code from package.js to the target page console.
 ```
 ## Basic usage
 ```
