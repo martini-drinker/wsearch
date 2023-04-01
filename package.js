@@ -3,7 +3,8 @@ function wsearch(searchRegexp, target, options) {
 
 	target = target[targetName];
 
-	let wsearchObj = [true];
+	let set = new Set();
+	let setFunc = new Set();
 
 	let types = [`Window`, `Object`, `Array`, `Set`, `Map`];
 
@@ -18,7 +19,6 @@ function wsearch(searchRegexp, target, options) {
 	let params = {
 		types: new RegExp(`^\\[object\\s(${types.join(`|`)})\\]$`, `i`),
 		functions: options?.functions ? true : false,
-		varName: options?.varName || `wsearchWasHere`,
 		byProp: options?.byProp ? true : false
 	};
 
@@ -28,8 +28,6 @@ function wsearch(searchRegexp, target, options) {
 		results = wsearchRecursion(target);
 	} catch (e) { }
 
-	wsearchObj[0] = false;
-
 	return results || [];
 
 	function wsearchRecursion(obj, findPathArr = [], path = targetName) {
@@ -38,11 +36,11 @@ function wsearch(searchRegexp, target, options) {
 		try {
 			let type = Object.prototype.toString.call(obj).match(params.types);
 
-			if (!type || (obj[params.varName] && obj[params.varName][0])) {
+			if (!type || set.has(obj)) {
 				return
 			}
 
-			obj[params.varName] = wsearchObj;
+			set.add(obj);
 
 			type = type[1].toLowerCase();
 
@@ -89,29 +87,31 @@ function wsearch(searchRegexp, target, options) {
 
 		for (let elem of arr) {
 			try {
-				if (params.byProp && isPrimitive(elem.key)) {
-					if (elem.key === params.varName) {
-						continue
-					}
-					
-					let match = `${elem.key}`.match(searchRegexp);
+				if (params.byProp) {
+					if (isPrimitive(elem.key)) {
+						pathCheckPush(elem.key, elem.path, findPathArr);
+					} else if (params.functions && typeof elem.key === `function` && !setFunc.has(elem.key)) {
+						setFunc.add(elem.key);
 
-					if (match) {
-						findPathArr.push([elem.path, match]);
+						pathCheckPush(elem.key, elem.path, findPathArr);
 					}
 				}
 
 				if (isPrimitive(elem.value)) {
 					if (!params.byProp) {
-						let match = `${elem.value}`.match(searchRegexp);
-
-						if (match) {
-							findPathArr.push([elem.path, match]);
-						}
+						pathCheckPush(elem.value, elem.path, findPathArr);
 					}
-				} else {
-					wsearchRecursion(elem.value, findPathArr, elem.path);
+
+					continue
 				}
+
+				if (!params.byProp && params.functions && typeof elem.value === `function` && !setFunc.has(elem.value)) {
+					setFunc.add(elem.value);
+
+					pathCheckPush(elem.value, elem.path, findPathArr);
+				}
+
+				wsearchRecursion(elem.value, findPathArr, elem.path);
 			} catch (e) { }
 		}
 
@@ -119,8 +119,16 @@ function wsearch(searchRegexp, target, options) {
 	}
 
 	function isPrimitive(value) {
-		if ( (params.functions && typeof value === `function`) || value !== Object(value) ) {
+		if (value !== Object(value)) {
 			return true
+		}
+	}
+
+	function pathCheckPush(value, path, findPathArr) {
+		let match = `${value}`.match(searchRegexp);
+
+		if (match) {
+			findPathArr.push([path, match]);
 		}
 	}
 }
