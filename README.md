@@ -7,7 +7,7 @@ npm i wsearch
 ```
 and import into your file:
 ```js
-const wsearch = require(`wsearch`);
+const wsearch = require('wsearch');
 ```
 - from browser DevTools
 ```
@@ -41,7 +41,7 @@ wsearch(query, {target}[, options])
 
 For example:
 ```js
-wsearch(/Hello\sworld/, {window});
+wsearch(/Hello\sworld/, {window}, {byProp: true});
 ```
 Output:
 ```
