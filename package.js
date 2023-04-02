@@ -28,14 +28,14 @@ function wsearch(searchRegexp, target, options) {
 		results = wsearchRecursion(target);
 	} catch (e) { }
 
-	return results || []
+	return results || [];
 
 	function wsearchRecursion(obj, findPathArr = [], path = targetName) {
 		let arr = [];
 
 		try {
 			if (!Object.prototype.toString.call(obj).match(params.types) || set.has(obj)) {
-				return
+				return;
 			}
 
 			set.add(obj);
@@ -86,7 +86,7 @@ function wsearch(searchRegexp, target, options) {
 				}
 			}
 		} catch (e) {
-			return
+			return;
 		}
 
 		for (let elem of arr) {
@@ -119,12 +119,12 @@ function wsearch(searchRegexp, target, options) {
 			} catch (e) { }
 		}
 
-		return findPathArr
+		return findPathArr;
 	}
 
 	function isPrimitive(value) {
 		if (value !== Object(value)) {
-			return true
+			return true;
 		}
 	}
 
