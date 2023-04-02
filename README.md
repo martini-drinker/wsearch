@@ -26,7 +26,7 @@ wsearch(query, {target}[, options])
 - `target` \<Object\> | \<Array\> | etc. Object with any prototype to search
 - `options` \<Object\>
 	- `byKeys` \<boolean\> Default: `false`
-		> Change the mode to search by properties name.
+		> Change the mode to search by property names.
 	- `functions` \<boolean\> Default: `false`
 		> Add functions body to search.
 	- `typesAdd` \<Array\>
