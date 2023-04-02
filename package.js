@@ -19,7 +19,7 @@ function wsearch(searchRegexp, target, options) {
 	let params = {
 		types: new RegExp(`^\\[object\\s(?:${types.join(`|`)})\\]$`, `i`),
 		functions: options?.functions ? true : false,
-		byKey: options?.byKey ? true : false
+		byKeys: options?.byKeys ? true : false
 	};
 
 	let results;
@@ -91,7 +91,7 @@ function wsearch(searchRegexp, target, options) {
 
 		for (let elem of arr) {
 			try {
-				if (params.byKey) {
+				if (params.byKeys) {
 					if (isPrimitive(elem.key)) {
 						pathCheckPush(elem.key, elem, obj, findPathArr);
 					} else if (params.functions && typeof elem.key === `function` && !setFunc.has(elem.key)) {
@@ -102,14 +102,14 @@ function wsearch(searchRegexp, target, options) {
 				}
 
 				if (isPrimitive(elem.value)) {
-					if (!params.byKey) {
+					if (!params.byKeys) {
 						pathCheckPush(elem.value, elem, obj, findPathArr);
 					}
 
 					continue
 				}
 
-				if (!params.byKey && params.functions && typeof elem.value === `function` && !setFunc.has(elem.value)) {
+				if (!params.byKeys && params.functions && typeof elem.value === `function` && !setFunc.has(elem.value)) {
 					setFunc.add(elem.value);
 
 					pathCheckPush(elem.value, elem, obj, findPathArr);
