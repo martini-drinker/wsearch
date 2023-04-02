@@ -1,5 +1,5 @@
 # wsearch
-Simple function to search values (or properties) in objects by RegExp.
+Simple function to search values (or keys) in objects by RegExp.
 ## Installation
 - from package manager
 ```
@@ -25,8 +25,8 @@ wsearch(query, {target}[, options])
 - `query` \<RegExp\> Search query
 - `target` \<Object\> | \<Array\> | etc. Object with any prototype to search
 - `options` \<Object\>
-	- `byProp` \<boolean\> Default: `false`
-		> Change the mode to search by property name.
+	- `byKeys` \<boolean\> Default: `false`
+		> Change the mode to search by properties name.
 	- `functions` \<boolean\> Default: `false`
 		> Add functions body to search.
 	- `typesAdd` \<Array\>
