@@ -15,8 +15,9 @@
     "search",
     "find",
     "object",
-    "value",
-    "property"
+    "property",
+    "key",
+    "value"
   ],
   "author": "martini-drinker",
   "license": "ISC",
