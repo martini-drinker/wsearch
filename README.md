@@ -41,7 +41,7 @@ wsearch(query, {target}[, options])
 
 For example:
 ```js
-wsearch(/Hello\sworld/, {window}, {byProp: true});
+wsearch(/Hello\sworld/, {window}, {functions: true});
 ```
 Output:
 ```
