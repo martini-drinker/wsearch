@@ -8,6 +8,8 @@ npm i wsearch
 and import into your file:
 ```js
 const wsearch = require('wsearch');
+//or
+import wsearch from 'wsearch';
 ```
 - from browser DevTools
 ```
