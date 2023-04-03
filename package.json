@@ -1,7 +1,7 @@
 {
   "name": "wsearch",
-  "version": "1.1.12",
-  "description": "Simple function to search values (or properties) in objects by RegExp.",
+  "version": "1.1.13",
+  "description": "Simple function to search values (or keys) in objects by RegExp.",
   "main": "package.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
