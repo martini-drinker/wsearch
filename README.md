@@ -1,5 +1,5 @@
 # wsearch
-Simple function to search values (or keys) in objects by RegExp.
+Function to search values (or keys) in objects by RegExp.
 ## Installation
 - from package manager
 ```
@@ -13,15 +13,13 @@ import wsearch from 'wsearch';
 ```
 - from browser DevTools
 ```
-Put function code from package.js to the target page console.
+Put code from "index.min.js" to the target page console.
 ```
 ## Basic usage
 ```
 wsearch(query, {target}[, options])
 ```
 > Nesting target in the object with a single property is ***required*** for valid path in output.
->
-> Default search prototypes: `["Window", "Object", "Array", "Set", "Map", "Function"]`
 - `query` \<RegExp\> Search query
 - `target` \<Object\> | \<Array\> | etc. Object with any prototype to search
 - `options` \<Object\>
@@ -29,16 +27,13 @@ wsearch(query, {target}[, options])
 		> Change the mode to search by property names.
 	- `functions` \<boolean\> Default: `false`
 		> Add functions body to search.
-	- `typesAdd` \<Array\>
-		> Add prototypes to defaults (like "Location", "Navigator" etc.). You can get type of any object:
+	- `types` \<Array\>
+		> Search only in custom prototypes (like ["Object", "Map"]). You can get type of any object:
 		```js
 		Object.prototype.toString.call(object);
 		```
-	- `typesSet` \<Array\> | "all"
-		> Replace defaults prototypes.
-		>
-		> ***WARNING!*** Use parameter "all" very carefully. With this parameter search will be performed in all prototypes that are found and will take a very long time. Most of the time this option value is not needed.
-	
+	- `proto` \<boolean\> Default: `true`
+		> Search in prototype tree.
 - Returns: \<Array\>
 
 For example:
@@ -59,4 +54,4 @@ Output:
 ]
 ```
 ## Info
-If the found path includes Map/Set object, access to the properties of these objects will be performed through an array with index valid at the time of the search.
+If the found path includes Map/Set object or Symbol, access to the keys will be performed through an array with index valid at the time of the search.
