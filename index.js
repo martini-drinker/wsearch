@@ -185,7 +185,7 @@ function wsearch(searchRegexp, target, options) {
 				}
 			}
 
-			if (value !== obj) {
+			if (valuePath && value !== obj) {
 				arr.push({
 					key: ``,
 					value: value,

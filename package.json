@@ -1,6 +1,6 @@
 {
   "name": "wsearch",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Function to search values (or keys) in objects by RegExp.",
   "main": "index.js",
   "scripts": {
