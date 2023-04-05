@@ -1,8 +1,8 @@
 {
   "name": "wsearch",
-  "version": "1.1.13",
-  "description": "Simple function to search values (or keys) in objects by RegExp.",
-  "main": "package.js",
+  "version": "2.0.0",
+  "description": "Function to search values (or keys) in objects by RegExp.",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,7 +17,8 @@
     "object",
     "property",
     "key",
-    "value"
+    "value",
+    "regexp"
   ],
   "author": "martini-drinker",
   "license": "ISC",
