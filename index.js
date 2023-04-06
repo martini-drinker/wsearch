@@ -50,14 +50,14 @@ function wsearch(searchRegexp, target, options) {
 							arr.push({
 								key: item[0],
 								value: item[0],
-								path: `[...${path}.keys()][${i}]`
+								path: obj.keys === Map.prototype.keys ? `[...${path}.keys()][${i}]` : `[...Map.prototype.keys.call(${path})][${i}]`
 							});
 						}
 
 						arr.push({
 							key: item[0],
 							value: item[1],
-							path: `[...${path}.values()][${i}]`
+							path: obj.values === Map.prototype.values ? `[...${path}.values()][${i}]` : `[...Map.prototype.values.call(${path})][${i}]`
 						});
 					});
 				}
@@ -162,30 +162,18 @@ function wsearch(searchRegexp, target, options) {
 			if (/^\[object\snumber\]$/i.test(type)) {
 				value = Number.prototype.valueOf.call(obj);
 
-				if (Number.prototype.valueOf === obj.valueOf) {
-					valuePath = `${path}.valueOf()`;
-				} else {
-					valuePath = `Number.prototype.valueOf.call(${path})`;
-				}
+				valuePath = obj.valueOf === Number.prototype.valueOf ? `${path}.valueOf()` : `Number.prototype.valueOf.call(${path})`;
 			} else if (/^\[object\sstring\]$/i.test(type)) {
 				value = String.prototype.valueOf.call(obj);
 
-				if (String.prototype.valueOf === obj.valueOf) {
-					valuePath = `${path}.valueOf()`;
-				} else {
-					valuePath = `String.prototype.valueOf.call(${path})`;
-				}
+				valuePath = obj.valueOf === String.prototype.valueOf ? `${path}.valueOf()` : `String.prototype.valueOf.call(${path})`;
 			} else if (/^\[object\sboolean\]$/i.test(type)) {
 				value = Boolean.prototype.valueOf.call(obj);
 
-				if (Boolean.prototype.valueOf === obj.valueOf) {
-					valuePath = `${path}.valueOf()`;
-				} else {
-					valuePath = `Boolean.prototype.valueOf.call(${path})`;
-				}
+				valuePath = obj.valueOf === Boolean.prototype.valueOf ? `${path}.valueOf()` : `Boolean.prototype.valueOf.call(${path})`;
 			}
 
-			if (valuePath && value !== obj) {
+			if (valuePath) {
 				arr.push({
 					key: ``,
 					value: value,
