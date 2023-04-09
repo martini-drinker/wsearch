@@ -6,8 +6,7 @@ function wsearch(searchRegexp, target, options) {
 	let params = {
 		byKeys: !!options?.byKeys,
 		functions: !!options?.functions,
-		types: options?.types ? new RegExp(`^\\[object\\s(?:${options.types.join(`|`)})\\]$`, `i`) : false,
-		proto: typeof options?.proto === `undefined` ? true : !!options?.proto
+		types: options?.types ? new RegExp(`^\\[object\\s(?:${options.types.join(`|`)})\\]$`, `i`) : false
 	};
 
 	let set = new Set();
@@ -31,7 +30,9 @@ function wsearch(searchRegexp, target, options) {
 				return;
 			}
 
-			getAllProperties(obj, params.proto, arr, path);
+			set.add(obj);
+
+			getAllProperties(obj, path, arr);
 
 			getValueOf(obj, type, arr, path);
 
@@ -121,37 +122,31 @@ function wsearch(searchRegexp, target, options) {
 		} catch { }
 	}
 
-	function getAllProperties(obj, withProto, arr, path) {
-		if (!set.has(obj)) {
-			set.add(obj);
+	function getAllProperties(obj, path, arr, currObj = obj, currPath = path) {
+		Object.getOwnPropertyNames(currObj).forEach(item => {
+			try {
+				arr.push({
+					key: item,
+					value: obj[item],
+					path: `${path}[\`${item}\`]`
+				});
+			} catch { }
+		});
 
-			Object.getOwnPropertyNames(obj).forEach(item => {
-				try {
-					arr.push({
-						key: item,
-						value: obj[item],
-						path: `${path}[\`${item}\`]`
-					});
-				} catch { }
-			});
+		Object.getOwnPropertySymbols(currObj).forEach((item, i) => {
+			try {
+				arr.push({
+					key: item,
+					value: obj[item],
+					path: `${path}[Object.getOwnPropertySymbols(${currPath})[${i}]]`
+				});
+			} catch { }
+		});
 
-			Object.getOwnPropertySymbols(obj).forEach((item, i) => {
-				try {
-					arr.push({
-						key: item,
-						value: obj[item],
-						path: `${path}[Object.getOwnPropertySymbols(${path})[${i}]]`
-					});
-				} catch { }
-			});
+		let proto = Object.getPrototypeOf(currObj);
 
-			if (withProto) {
-				let proto = Object.getPrototypeOf(obj);
-
-				if (proto) {
-					getAllProperties(proto, withProto, arr, `Object.getPrototypeOf(${path})`);
-				}
-			}
+		if (proto) {
+			getAllProperties(obj, path, arr, proto, `Object.getPrototypeOf(${path})`);
 		}
 	}
 
