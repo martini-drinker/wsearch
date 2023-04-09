@@ -28,12 +28,12 @@ wsearch(query, {target}[, options])
 	- `functions` \<boolean\> Default: `false`
 		> Add functions body to search.
 	- `types` \<Array\>
-		> Search only in custom prototypes (like ["Object", "Map"]). You can get type of any object:
+		> Search only in custom prototypes (like ["Object", "Map"]). Used to speed up searches.
+		>
+		> You can get type of any object:
 		```js
 		Object.prototype.toString.call(object);
 		```
-	- `proto` \<boolean\> Default: `true`
-		> Search in prototype tree.
 - Returns: \<Array\>
 
 For example:
