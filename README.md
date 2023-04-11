@@ -20,6 +20,8 @@ Put code from "index.min.js" to the target page console.
 wsearch(query, {target}[, options])
 ```
 > Nesting target in the object with a single property is ***required*** for valid path in output.
+>
+> Default search prototypes: `["Window", "Object", "Array", "Set", "Map", "Function"]`
 - `query` \<RegExp\> Search query
 - `target` \<Object\> | \<Array\> | etc. Object with any prototype to search
 - `options` \<Object\>
@@ -27,13 +29,15 @@ wsearch(query, {target}[, options])
 		> Change the mode to search by property names.
 	- `functions` \<boolean\> Default: `false`
 		> Add functions body to search.
-	- `types` \<Array\>
-		> Search only in custom prototypes (like ["Object", "Map"]). Used to speed up searches.
-		>
-		> You can get type of any object:
+	- `typesAdd` \<Array\>
+		> Add prototypes to defaults (like "Location", "Navigator" etc.). You can get type of any object:
 		```js
 		Object.prototype.toString.call(object);
 		```
+	- `typesSet` \<Array\> | "all"
+		> Replace defaults prototypes.
+		>
+		> With parameter "all" search will be performed in all prototypes in target object that are found and maybe will take a lot of time.
 - Returns: \<Array\>
 
 For example:
