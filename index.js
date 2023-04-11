@@ -3,10 +3,24 @@ function wsearch(searchRegexp, target, options) {
 
 	target = target[targetName];
 
+	let types = [`window`, `object`, `array`, `set`, `map`, `function`];
+
+	if (options?.typesSet === `all`) {
+		types = [`.+`];
+	} else if (Array.isArray(options?.typesSet)) {
+		let typesSet = options.typesSet.map(i => i.toLowerCase());
+
+		types = [...new Set(typesSet)];
+	} else if (Array.isArray(options?.typesAdd)) {
+		let typesAdd = options.typesAdd.map(i => i.toLowerCase());
+
+		types = [...new Set([...types, ...typesAdd])];
+	}
+
 	let params = {
 		byKeys: !!options?.byKeys,
 		functions: !!options?.functions,
-		types: options?.types ? new RegExp(`^\\[object\\s(?:${options.types.join(`|`)})\\]$`, `i`) : false
+		types: new RegExp(`^\\[object\\s(?:${types.join(`|`)})\\]$`, `i`)
 	};
 
 	let set = new Set();
@@ -84,7 +98,7 @@ function wsearch(searchRegexp, target, options) {
 						pathCheckPush(elem.value, elem, obj, findPathArr);
 					}
 
-					continue
+					continue;
 				}
 
 				if (!params.byKeys && params.functions && typeof elem.value === `function` && !set2.has(elem.value)) {
@@ -122,31 +136,39 @@ function wsearch(searchRegexp, target, options) {
 		} catch { }
 	}
 
-	function getAllProperties(obj, path, arr, currObj = obj, currPath = path) {
+	function getAllProperties(obj, path, arr, currObj = obj, currPath = path, set = new Set()) {
 		Object.getOwnPropertyNames(currObj).forEach(item => {
 			try {
-				arr.push({
-					key: item,
-					value: obj[item],
-					path: `${path}[\`${item}\`]`
-				});
+				if (!set.has(item)) {
+					arr.push({
+						key: item,
+						value: obj[item],
+						path: `${path}[\`${item}\`]`
+					});
+
+					set.add(item);
+				}
 			} catch { }
 		});
 
 		Object.getOwnPropertySymbols(currObj).forEach((item, i) => {
 			try {
-				arr.push({
-					key: item,
-					value: obj[item],
-					path: `${path}[Object.getOwnPropertySymbols(${currPath})[${i}]]`
-				});
+				if (!set.has(item)) {
+					arr.push({
+						key: item,
+						value: obj[item],
+						path: `${path}[Object.getOwnPropertySymbols(${currPath})[${i}]]`
+					});
+
+					set.add(item);
+				}
 			} catch { }
 		});
 
 		let proto = Object.getPrototypeOf(currObj);
 
 		if (proto) {
-			getAllProperties(obj, path, arr, proto, `Object.getPrototypeOf(${path})`);
+			getAllProperties(obj, path, arr, proto, `Object.getPrototypeOf(${path})`, set);
 		}
 	}
 
