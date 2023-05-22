@@ -13,7 +13,7 @@ import wsearch from 'wsearch';
 ```
 - from browser DevTools
 ```
-Put code from "index.min.js" to the target page console.
+Put code from "wsearch.min.js" to the target page console.
 ```
 ## Basic usage
 ```
